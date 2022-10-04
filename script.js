@@ -1,21 +1,51 @@
 "use strict"
 
-const goods = [
-	{ title: 'Shirt', price: 150 },
-	{ title: 'Socks', price: 50 },
-	{ title: 'Jacket', price: 350 },
-	{ title: 'Shoes', price: 250 },
-];
+const URL = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses"
+const GOODS = "/catalogData.json"
+const url = `${URL}${GOODS}`;
 
-const renderGoodsItem = ({ title = '', price = 0 }) =>
-	`<div class="goods-item">
-<h3>${title}</h3>
-<p>${price}</p>
-</div>`;
-
-const renderGoodsList = (list = []) => {
-	let goodsList = list.map(item => renderGoodsItem(item));
-	document.querySelector('.goods-list').innerHTML = goodsList.join('');
+function service(url) {
+	return new Promise((resolve) => {
+		const xhr = new XMLHttpRequest();
+		xhr.open('GET', url);
+		xhr.onload = () => {
+			const result = JSON.parse(xhr.response)
+			resolve(result)
+		};
+		xhr.send();
+	})
 }
-renderGoodsList(goods);
+
+const app = new Vue({
+	el: '#root',
+	data: {
+		goods: [],
+		search: '',
+		isVisibleCart: false
+	},
+	mounted() {
+		service(url).then((data) => {
+			this.goods = data;
+		});
+	},
+	computed: {
+		calculateAllPrice() {
+			return this.goods.reduce((prev, goods) => {
+				return prev + goods.price;
+			}, 0)
+		},
+		filterGoods() {
+			return this.goods.filter((item) => {
+				const regExp = new RegExp(this.search);
+				return regExp.test(item.product_name)
+			})
+		},
+	},
+	methods: {
+		setVisibleCard() {
+			this.isVisibleCart = !this.isVisibleCart;
+		}
+	},
+
+})
 
