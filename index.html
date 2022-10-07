@@ -10,15 +10,24 @@
 </head>
 
 <body>
-	<header class="top">
-		<a class="logo" href="index.html"><img class="logo_img" src="img/header/cat.png" alt="logo"></a>
-		<button class="cart-button" type="button"><img class="cart_img" src="img/header/cart.png"
-				alt="Корзина"></button>
-	</header>
-	<main>
-		<div class="goods-list"></div>
-	</main>
-
+	<div id="root">
+		<header class="top">
+			<a class="logo" href="index.html"><img class="logo_img" src="img/header/cat.png" alt="logo"></a>
+			<search-area v-model="search"></search-area>
+			<custom_button v-on:click="setVisibleCard">
+				<img class="cart_img" src="img/header/cart.png" alt="Корзина">
+			</custom_button>
+		</header>
+		<main>
+			<div class="goods-list">
+				<goods_item v-for="item in filterGoods" :item="item"></goods_item>
+			</div>
+			<div class="no-data" v-if="!filterGoods.length">Нет данных</div>
+			<div>{{calculateAllPrice}}</div>
+		</main>
+		<basket v-if="isVisibleCart" v-on:closeclick="setVisibleCard"></basket>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
 	<script src="script.js"></script>
 </body>
 
