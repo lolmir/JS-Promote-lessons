@@ -1,9 +1,9 @@
 * {
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
-body {
+html, body, #root {
   width: 100%;
   height: 100%;
 }
@@ -12,79 +12,65 @@ body {
   display: grid;
   grid-template-rows: -webkit-max-content auto;
   grid-template-rows: max-content auto;
-  gap: 50px;
+  gap: 40px;
+  position: relative;
 }
 
-.top {
-  height: 50px;
-  background-color: pink;
+header {
+  height: 100px;
   display: grid;
-  align-items: center;
-  grid-template-columns: 8fr 1fr 1fr;
-  row-gap: 50px;
+  grid-template-columns: auto -webkit-max-content -webkit-max-content;
+  grid-template-columns: auto max-content max-content;
+  background-color: pink;
 }
 
-.logo_img {
-  padding: 10px 0 0 50px;
-  width: 30px;
-  height: 30px;
+.title {
+  color: black;
+  padding: 10px;
 }
 
-.goods-search {
-  width: 100px;
-  height: 20px;
+.actions, .search {
+  padding: 10px;
 }
 
-.search-button {
-  width: 50px;
-  height: 24px;
-}
-
-.cart-button {
-  margin: 5px 50px 5px 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.cart_img {
-  width: 30px;
-  height: 30px;
+button {
+  padding: 10px;
 }
 
 .goods-list {
   display: flex;
   justify-content: center;
-  gap: 50px;
+  gap: 40px;
 }
 
 .goods-item {
   width: 200px;
   height: 300px;
-  display: flex;
-  flex-direction: column;
   padding: 10px;
   box-sizing: border-box;
   outline: 5px solid pink;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
-  justify-content: center;
-  align-items: center;
 }
 
-.basket-area {
+.goods-search {
+  height: 36px;
+}
+
+.fixed-area {
   position: fixed;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(148, 95, 129, 0.3568627451);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .basket-card {
   width: 80%;
   height: 80%;
-  border: 5px solid pink;
   background-color: white;
   display: grid;
   grid-template-rows: -webkit-max-content auto;
@@ -100,8 +86,8 @@ body {
   padding: 10px;
 }
 .basket-card__header__delete-icon {
-  background-image: url("img/basket area/close.svg");
-  background-size: cover;
+  background-image: url("img/delete_icon.png");
+  background-size: contain;
   width: 30px;
   height: 30px;
   margin: 10px;
@@ -109,13 +95,7 @@ body {
 }
 .basket-card__content {
   padding: 10px;
-}
-
-.no-data {
-  width: 100%;
-  height: 100%;
   display: flex;
-  justify-content: center;
-  font-size: 50px;
-  font-weight: bold;
+  flex-direction: column;
+  gap: 10px;
 }/*# sourceMappingURL=style.css.map */

@@ -3,32 +3,33 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>eShop</title>
-	<link href="style.css" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+	<script src="script.js"></script>
 </head>
 
 <body>
 	<div id="root">
-		<header class="top">
-			<a class="logo" href="index.html"><img class="logo_img" src="img/header/cat.png" alt="logo"></a>
-			<search-area v-model="search"></search-area>
-			<custom_button v-on:click="setVisibleCard">
-				<img class="cart_img" src="img/header/cart.png" alt="Корзина">
-			</custom_button>
+		<header>
+			<h1 class="title">eShop - {{search}}</h1>
+			<div class="search">
+				<search-component v-model="search"></search-component>
+			</div>
+			<div class="actions">
+				<custom-button v-on:click="setVisionCard">Корзина</custom-button>
+			</div>
 		</header>
 		<main>
 			<div class="goods-list">
-				<goods_item v-for="item in filterGoods" :item="item"></goods_item>
+				<goods-item v-for="item in filteredItems" v-bind:item="item"></goods-item>
 			</div>
-			<div class="no-data" v-if="!filterGoods.length">Нет данных</div>
-			<div>{{calculateAllPrice}}</div>
 		</main>
-		<basket v-if="isVisibleCart" v-on:closeclick="setVisibleCard"></basket>
+		<basket-goods v-if="cardIsVision" v-on:closeclick="setVisionCard"></basket-goods>
+
+
+		<!--      <div>{{ calculatePrice }}</div>-->
 	</div>
-	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
-	<script src="script.js"></script>
 </body>
 
 </html>
