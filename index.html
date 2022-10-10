@@ -3,23 +3,33 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>eShop</title>
-	<link href="style.css" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+	<script src="script.js"></script>
 </head>
 
 <body>
-	<header class="top">
-		<a class="logo" href="index.html"><img class="logo_img" src="img/header/cat.png" alt="logo"></a>
-		<button class="cart-button" type="button"><img class="cart_img" src="img/header/cart.png"
-				alt="Корзина"></button>
-	</header>
-	<main>
-		<div class="goods-list"></div>
-	</main>
+	<div id="root">
+		<header>
+			<h1 class="title">eShop - {{search}}</h1>
+			<div class="search">
+				<search-component v-model="search"></search-component>
+			</div>
+			<div class="actions">
+				<custom-button v-on:click="setVisionCard">Корзина</custom-button>
+			</div>
+		</header>
+		<main>
+			<div class="goods-list">
+				<goods-item v-for="item in filteredItems" v-bind:item="item"></goods-item>
+			</div>
+		</main>
+		<basket-goods v-if="cardIsVision" v-on:closeclick="setVisionCard"></basket-goods>
 
-	<script src="script.js"></script>
+
+		<!--      <div>{{ calculatePrice }}</div>-->
+	</div>
 </body>
 
 </html>
