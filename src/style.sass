@@ -16,16 +16,16 @@ header
 	height: 100px
 	display: grid
 	grid-template-columns: auto max-content max-content
-	background-color: pink
+	background-color: black
 
 .title
-	color: black
+	color: white
 	padding: 10px
 
 .actions, .search
 	padding: 10px
 
-button
+.custom-button
 	padding: 10px
 
 .goods-list
@@ -38,7 +38,7 @@ button
 	height: 300px
 	padding: 10px
 	box-sizing: border-box
-	outline: 5px solid pink
+	outline: 1px solid black
 	display: flex
 	flex-direction: column
 	gap: 10px
@@ -62,24 +62,42 @@ button
 	display: grid
 	grid-template-rows: max-content auto
 
+
 	&__header
-		box-sizing: border-box
-		display: grid
-		grid-template-columns: auto max-content
+	    box-sizing: border-box
+	    display: grid
+	    grid-template-columns: auto max-content
+
 
 	&__header__title
-		padding: 10px
+	    padding: 10px
+
 
 	&__header__delete-icon
-		background-image: url("img/delete_icon.png")
-		background-size: contain
-		width: 30px
-		height: 30px
-		margin: 10px
-		cursor: pointer
+	    background-image: url("img/delete_icon.png")
+	    background-size: contain
+	    width: 30px
+	    height: 30px
+	    margin: 10px
+	    cursor: pointer
+
 
 	&__content
-		padding: 10px
-		display: flex
-		flex-direction: column
-		gap: 10px
+	    padding: 10px
+
+.basket-item
+	padding: 10px
+	display: flex
+	gap: 30px
+
+
+	&__title
+	    font-weight: bold
+
+
+	&__total
+	    margin-left: 100px
+
+
+	&__count button
+	    padding: 0 5px

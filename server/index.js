@@ -1,123 +1,79 @@
-const express = require('express');
-const cors = require('cors');
-const { writeFile, readFile } = require('fs/promises');
+import { writeFile, readFile } from 'fs/promises'
+import express from 'express';
+import cors from 'cors';
 
-const BASKET_GOODS = "./static/basket-goods.json"
-const GOODS = "./static/goods.json"
+const GOODS_PATH = './static/goods.json'
+const BASKET_GOODS_PATH = './static/basket-goods.json'
 
-
-
-
-function getRawBasketGoods() {
-	return readFile(BASKET_GOODS, 'utf-8').then((text) => {
-		return JSON.parse(text);
-	});
-}
 function getGoods() {
-	return readFile(GOODS, 'utf-8').then((text) => {
-		return JSON.parse(text);
-	});
+	return readFile(GOODS_PATH, 'utf-8').then((file) => JSON.parse(file))
 }
-
 function getBasketGoods() {
-	return Promise.all([
-		getRawBasketGoods(),
-		getGoods()
-	]).then(([rawBasketGoods, goods]) => {
-		return rawBasketGoods.map((rawBasketGood) => {
-			const { id, count } = rawBasketGood;
-			const good = goods.find(({ id: goodsId }) => {
-				return goodsId === id
-			});
-			return {
-				...rawBasketGood,
-				data: good,
-				total: count * good.price
-			}
-		})
-	})
-}
-
-function deleteBasketGood(_id) {
-	return getRawBasketGoods().then((basketGoods) => {
-		return basketGoods.map((basketGood) => {
-			if (basketGood.id === _id) {
-				return {
-					...basketGood,
-					count: basketGood.count - 1
-				}
-
-			} else {
-				return basketGood;
-			}
-		}).filter(({ count }) => count > 0);
-	}).then((result) => {
-		return writeFile(BASKET_GOODS, JSON.stringify(result)).then(() => {
-			return result;
-		})
-	})
-}
-
-function addBasketGood(_id) {
-	return getRawBasketGoods().then((basketGoods) => {
-		if (basketGoods.find(({ id }) => id === _id)) {
-			const result = basketGoods.map((basketGood) => {
-				if (basketGood.id === _id) {
-					return {
-						...basketGood,
-						count: basketGood.count + 1
-					}
-				} else {
-					return basketGood
-				}
-			});
-			return result;
-		} else {
-			return [
-				...basketGoods,
-				{
-					id: _id,
-					count: 1
-				}
-			];
-		}
-	})
-		.then((result) => {
-			return writeFile(BASKET_GOODS, JSON.stringify(result)).then(() => {
-				return result;
-			})
-		})
+	return readFile(BASKET_GOODS_PATH, 'utf-8').then((file) => JSON.parse(file))
 }
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('static'));
+app.use(cors());
 
 
-app.get('/basket_goods', (req, res) => {
-	getBasketGoods().then((data) => {
-		res.send(data)
-	});
-});
-
-app.put('/basket_goods', (req, res) => {
-	addBasketGood(req.body.id).then((basketGoods) => {
-		getBasketGoods().then((data) => {
-			res.send(data)
-		});
+app.get('/goods', (res, req) => {
+	getGoods().then((goods) => {
+		req.send(JSON.stringify(goods));
 	})
 });
-app.delete('/basket_goods', (req, res) => {
-	deleteBasketGood(req.body.id).then(() => {
-		getBasketGoods().then((data) => {
-			res.send(data)
-		});
+
+app.get('/basketgoods', (res, req) => {
+	Promise.all([
+		getBasketGoods(),
+		getGoods()
+	]).then(([basketGoods, goods]) => {
+		const result = basketGoods.map((_basketGood) => {
+			const _good = goods.find(({ id }) => id === _basketGood.id);
+			return {
+				..._basketGood,
+				data: _good,
+				total: _good.price * _basketGood.count
+			}
+		})
+		req.send(JSON.stringify(result))
 	})
 
 });
+app.post('/basketgoods', (res, req) => {
+	console.log(res.body);
+	getBasketGoods().then((basketGoods) => {
+		let hasGod = false;
+		const result = basketGoods.map((basketGood) => {
+			if (basketGood.id === res.body.id) {
+				hasGod = true;
+				return {
+					...basketGood,
+					count: basketGood.count + 1
+				}
+			} else {
+				return basketGood
+			}
+		})
+		if (!hasGod) {
+			result.push({
+				id: res.body.id,
+				count: 1
+			})
+		}
+
+		const stringResult = JSON.stringify(result);
+		writeFile(BASKET_GOODS_PATH, stringResult).then(() => {
+			req.send(stringResult)
+		})
+	})
+});
+
+// app.delete('/basketgoods/:id', (res, req) => {
+//
+// })
 
 app.listen('8000', () => {
-	console.log('server is starting!');
-});
+	console.log('server is starting!')
+})
